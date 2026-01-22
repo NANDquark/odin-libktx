@@ -7,7 +7,7 @@ import vk "vendor:vulkan"
 when ODIN_OS == .Windows {
 	foreign import ktx "external/ktx.lib"
 } else {
-
+	foreign import ktx "external/libktx.so"
 }
 
 /**
@@ -23,7 +23,12 @@ Stream_skip :: proc "c" (str: ^Stream, count: c.size_t) -> error_code_e
 /**
 * @brief type for a pointer to a stream writing function
 */
-Stream_write :: proc "c" (str: ^Stream, src: rawptr, size: c.size_t, count: c.size_t) -> error_code_e
+Stream_write :: proc "c" (
+	str: ^Stream,
+	src: rawptr,
+	size: c.size_t,
+	count: c.size_t,
+) -> error_code_e
 
 /**
 * @brief type for a pointer to a stream position query function
@@ -78,7 +83,11 @@ PFNKTEXGETIMAGEOFFSET :: proc "c" (
 
 PFNKTEXGETDATASIZEUNCOMPRESSED :: proc "c" (This: ^Texture) -> c.size_t
 PFNKTEXGETIMAGESIZE :: proc "c" (This: ^Texture, level: u32) -> c.size_t
-PFNKTEXITERATELEVELS :: proc "c" (This: ^Texture, iterCb: PFNKTXITERCB, userdata: rawptr) -> error_code
+PFNKTEXITERATELEVELS :: proc "c" (
+	This: ^Texture,
+	iterCb: PFNKTXITERCB,
+	userdata: rawptr,
+) -> error_code
 
 PFNKTEXITERATELOADLEVELFACES :: proc "c" (
 	This: ^Texture,
@@ -128,7 +137,11 @@ Texture_LoadImageData :: proc(This: ^Texture, pBuffer: [^]u8, bufSize: c.size_t)
 	return This.vtbl.LoadImageData(This, pBuffer, bufSize)
 }
 
-Texture_IterateLevels :: proc(This: ^Texture, iterCb: PFNKTXITERCB, userdata: rawptr) -> error_code {
+Texture_IterateLevels :: proc(
+	This: ^Texture,
+	iterCb: PFNKTXITERCB,
+	userdata: rawptr,
+) -> error_code {
 	return This.vtbl.IterateLevels(This, iterCb, userdata)
 }
 
@@ -148,7 +161,10 @@ VulkanTexture_subAllocatorAllocMemFuncPtr :: proc "c" (
 	pageCount: ^u64,
 ) -> u64
 
-VulkanTexture_subAllocatorBindBufferFuncPtr :: proc "c" (buffer: vk.Buffer, allocId: u64) -> vk.Result
+VulkanTexture_subAllocatorBindBufferFuncPtr :: proc "c" (
+	buffer: vk.Buffer,
+	allocId: u64,
+) -> vk.Result
 
 VulkanTexture_subAllocatorBindImageFuncPtr :: proc "c" (image: vk.Image, allocId: u64) -> vk.Result
 
