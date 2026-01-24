@@ -6,8 +6,10 @@ import vk "vendor:vulkan"
 
 when ODIN_OS == .Windows {
 	foreign import ktx "external/ktx.lib"
+} else when ODIN_OS == .Linux {
+	foreign import ktx "external/libktx.a"
 } else {
-	foreign import ktx "external/libktx.so"
+
 }
 
 /**
